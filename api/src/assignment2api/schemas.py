@@ -4,12 +4,11 @@ from pydantic import BaseModel
 
 
 class PostBase(BaseModel):
-    title: str
+    text: str
 
 
 class PostCreate(PostBase):
     category_id: int
-    content: str
     owner_id: int
 
 
