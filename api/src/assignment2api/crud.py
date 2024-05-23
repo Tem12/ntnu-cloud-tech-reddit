@@ -1,7 +1,7 @@
-from sqlalchemy import desc
+from sqlalchemy import desc, select
 from sqlalchemy.orm import Session
 
-from . import models, schemas
+import models, schemas
 
 
 def get_user_by_id(db: Session, user_id: int):
@@ -12,8 +12,10 @@ def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
 
-def create_user(db: Session, create_user: schemas.UserCreate):
-    user = models.User(email=create_user.email, password=create_user.password)
+def create_user(db: Session, create_user: schemas.UserCreate, hashed_password: str):
+    user = models.User(
+        username=create_user.username, email=create_user.email, password=hashed_password
+    )
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -53,24 +55,41 @@ def delete_user(db: Session, delete_user_id: int):
     db.commit()
 
 
-def get_user_posts(db: Session, user_id: int):
+def get_count_of_user_posts(db: Session, user_id: int):
+    return db.query(models.Post).filter(models.Post.owner_id == user_id).count()
+
+
+def get_user_posts(db: Session, user_id: int, offset: int):
     return (
         db.query(models.Post)
         .filter(models.Post.owner_id == user_id)
         .order_by(desc(models.Post.created_at))
+        .offset(offset)
         .limit(10)
         .all()
     )
 
 
-def get_category_posts(db: Session, category_id: int):
-    return (
-        db.query(models.Post)
+def get_count_of_category_posts(db: Session, category_id: int):
+    return db.query(models.Post).filter(models.Post.category_id == category_id).count()
+
+
+def get_category_posts(db: Session, category_id: int, offset: int):
+    # return (
+    #     db.query(models.Post, models.User)
+    #     .filter(models.Post.category_id == category_id)
+    #     # .join(models.User, models.Post.owner_id == models.User.id)
+    #     # .order_by(desc(models.Post.created_at))
+    #     # .offset(offset)
+    #     # .limit(10)
+    #     .all()
+    # )
+
+    return db.execute(
+        select(models.Post, models.User.username)
+        .join(models.User, models.Post.owner_id == models.User.id)
         .filter(models.Post.category_id == category_id)
-        .order_by(desc(models.Post.created_at))
-        .limit(10)
-        .all()
-    )
+    ).mappings().all()
 
 
 def create_post(db: Session, create_post: schemas.PostCreate):

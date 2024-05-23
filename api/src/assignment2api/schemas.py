@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Union
 from pydantic import BaseModel
 
 
@@ -13,8 +12,14 @@ class PostCreate(PostBase):
 
 
 class Post(PostBase):
+    text: str
     likes: int
     created_at: datetime
+
+
+class PostWithOwnerName():
+    Post: Post
+    username: str
 
 
 class UserBase(BaseModel):
@@ -28,6 +33,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+    username: str
     posts: list[Post]
     created_at: datetime
 
@@ -42,3 +48,4 @@ class CategoryCreate(CategoryBase):
 
 class Category(CategoryBase):
     id: int
+    name: str
