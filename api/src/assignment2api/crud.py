@@ -75,21 +75,18 @@ def get_count_of_category_posts(db: Session, category_id: int):
 
 
 def get_category_posts(db: Session, category_id: int, offset: int):
-    # return (
-    #     db.query(models.Post, models.User)
-    #     .filter(models.Post.category_id == category_id)
-    #     # .join(models.User, models.Post.owner_id == models.User.id)
-    #     # .order_by(desc(models.Post.created_at))
-    #     # .offset(offset)
-    #     # .limit(10)
-    #     .all()
-    # )
-
-    return db.execute(
-        select(models.Post, models.User.username)
-        .join(models.User, models.Post.owner_id == models.User.id)
-        .filter(models.Post.category_id == category_id)
-    ).mappings().all()
+    return (
+        db.execute(
+            select(models.Post, models.User.username)
+            .join(models.User, models.Post.owner_id == models.User.id)
+            .filter(models.Post.category_id == category_id)
+            .order_by(desc(models.Post.created_at))
+            .offset(offset)
+            .limit(10)
+        )
+        .mappings()
+        .all()
+    )
 
 
 def create_post(db: Session, create_post: schemas.PostCreate):
