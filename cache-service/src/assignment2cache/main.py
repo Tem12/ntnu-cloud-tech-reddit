@@ -6,15 +6,14 @@
 # Date: May 20th, 2024
 # -------------------------------------------------------------
 
-import os
 import sys
-from typing import List, Optional
-from fastapi import FastAPI, HTTPException, Cookie, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import logging
+import redis
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException
 
 # Setup logger
 logger = logging.getLogger(__name__)
@@ -24,6 +23,8 @@ stream_handler.setFormatter(log_formatter)
 logger.addHandler(stream_handler)
 
 app = FastAPI()
+
+r = redis.Redis(host="localhost", port=6379, db=0)
 
 
 # Enable cors
@@ -49,10 +50,11 @@ setup()
 
 @app.post("/get-likes/{post_id}")
 def get_likes(post_id: int):
-    # TODO
-    pass
+    likes = int(r.get(post_id))
+    return {"likes": likes}
+
 
 @app.post("increment-likes/{post_id}")
 def increment_likes(post_id: int):
-    # TODO
-    pass
+    r.incr(post_id)
+    return {"success": True}
