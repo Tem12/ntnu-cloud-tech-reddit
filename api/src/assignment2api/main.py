@@ -62,9 +62,9 @@ setup()
 
 @app.post("/login")
 def login_user(
-    user: schemas.UserCreate, response: Response, db: Session = Depends(get_db)
+    user: schemas.UserLogin, response: Response, db: Session = Depends(get_db)
 ):
-    db_user = crud.get_user_by_email(db, user.email)
+    db_user = crud.get_user_by_username(db, user.username)
 
     # Check if user exists in DB
     if db_user is None:
@@ -161,3 +161,107 @@ def get_user_posts_count(user_id: int, db: Session = Depends(get_db)):
 @app.post("/get-user-posts/{user_id}")
 def get_user_posts(offset: int, user_id: int, db: Session = Depends(get_db)):
     return crud.get_user_posts(db, user_id, offset)
+
+
+@app.post("/user/{user_id}/info")
+def get_user_info(user_id: int, db: Session = Depends(get_db)):
+    info = crud.get_user_basic_info(db, user_id)
+
+    if info is None:
+        raise HTTPException(status_code=400, detail="Invalid user id")
+    
+    return info
+
+
+@app.post("/user/{user_id}/change-username")
+def change_user_password(user_id: int, user: schemas.UserEditUsername, token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
+    if token is None:
+        raise HTTPException(status_code=400, detail="Missing user token")
+
+    # Validate existing user JWT token
+    user_id_token = jwt_utils.validate_token(token)
+
+    # Check if id in url belongs to the authenticated user
+    if user_id_token != user_id:
+        raise HTTPException(status_code=400, detail="Invalid user URL")
+    
+    valid, reason = validation.valid_username(user.new_username)
+    if not valid:
+        raise HTTPException(status_code=400, detail=reason)
+    
+    update_operation = crud.update_username(db, user_id, user.new_username)
+
+    if not update_operation:
+        raise HTTPException(status_code=400, detail="Invalid user id")
+    
+    return {}
+
+
+@app.post("/user/{user_id}/change-password")
+def change_user_password(user_id: int, user: schemas.UserEditPassword, token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
+    if token is None:
+        raise HTTPException(status_code=400, detail="Missing user token")
+
+    # Validate existing user JWT token
+    user_id_token = jwt_utils.validate_token(token)
+
+    # Check if id in url belongs to the authenticated user
+    if user_id_token != user_id:
+        raise HTTPException(status_code=400, detail="Invalid user URL")
+    
+    valid, reason = validation.valid_password(user.new_password)
+    if not valid:
+        raise HTTPException(status_code=400, detail=reason)
+    
+    hashed_password = password_utils.create_hashed_password(user.new_password)
+
+    update_operation = crud.update_user_password(db, user_id, hashed_password)
+
+    if not update_operation:
+        raise HTTPException(status_code=400, detail="Invalid user id")
+    
+    return {}
+
+
+@app.post("/user/{user_id}/change-email")
+def change_user_password(user_id: int, user: schemas.UserEditEmail, token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
+    if token is None:
+        raise HTTPException(status_code=400, detail="Missing user token")
+
+    # Validate existing user JWT token
+    user_id_token = jwt_utils.validate_token(token)
+
+    # Check if id in url belongs to the authenticated user
+    if user_id_token != user_id:
+        raise HTTPException(status_code=400, detail="Invalid user URL")
+    
+    valid, reason = validation.valid_email(user.new_email)
+    if not valid:
+        raise HTTPException(status_code=400, detail=reason)
+    
+    update_operation = crud.update_user_email(db, user_id, user.new_email)
+
+    if not update_operation:
+        raise HTTPException(status_code=400, detail="Invalid user id")
+    
+    return {}
+
+
+@app.post("/user/{user_id}/remove-account")
+def remove_user_account(user_id: int, token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
+    if token is None:
+        raise HTTPException(status_code=400, detail="Missing user token")
+
+    # Validate existing user JWT token
+    user_id_token = jwt_utils.validate_token(token)
+
+    # Check id in url belongs to the authenticated user
+    if user_id_token != user_id:
+        raise HTTPException(status_code=400, detail="Invalid user URL")
+    
+    if crud.find_user_by_id(db, user_id) is None:
+        raise HTTPException(status_code=400, detail="Invalid user id")
+    
+    crud.delete_user(db, user_id)
+
+    return {}

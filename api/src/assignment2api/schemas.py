@@ -17,17 +17,21 @@ class Post(PostBase):
     created_at: datetime
 
 
-class PostWithOwnerName():
+class PostWithOwnerName:
     Post: Post
     username: str
 
 
 class UserBase(BaseModel):
-    email: str
+    username: str
+
+
+class UserLogin(UserBase):
+    password: str
 
 
 class UserCreate(UserBase):
-    username: str
+    email: str
     password: str
 
 
@@ -49,3 +53,15 @@ class CategoryCreate(CategoryBase):
 class Category(CategoryBase):
     id: int
     name: str
+
+
+class UserEditUsername(BaseModel):
+    new_username: str
+
+
+class UserEditPassword(BaseModel):
+    new_password: str
+
+
+class UserEditEmail(BaseModel):
+    new_email: str
