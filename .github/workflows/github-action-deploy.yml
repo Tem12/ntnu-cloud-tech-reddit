@@ -13,12 +13,12 @@ jobs:
         image: postgres
         ports:
           - 5432:5432
-        options: >-
-          # Set health checks to wait until postgresql is ready
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        # options: >-
+        #   # Set health checks to wait until postgresql is ready
+        #   --health-cmd pg_isready
+        #   --health-interval 10s
+        #   --health-timeout 5s
+        #   --health-retries 5
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -27,12 +27,12 @@ jobs:
         image: redis
         ports:
           - 6379:6379
-        options: >-
-          # Set health checks to wait until redis is ready
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        # options: >-
+        #   # Set health checks to wait until redis is ready
+        #   --health-cmd "redis-cli ping"
+        #   --health-interval 10s
+        #   --health-timeout 5s
+        #   --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
