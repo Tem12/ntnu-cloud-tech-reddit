@@ -15,4 +15,4 @@ r.set(10, 2)
 r.set(11, 56)
 r.set(12, 156)
 
-print('Redis cache successfully seeded')
+print("Redis cache successfully seeded")

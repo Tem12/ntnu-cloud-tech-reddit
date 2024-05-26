@@ -17,7 +17,7 @@ with engine.connect() as conn:
     conn.commit()
 
     print("Database being purged...")
-    
+
     categories = (
         {"id": 1, "name": "Science"},
         {"id": 2, "name": "Books"},
@@ -172,10 +172,17 @@ with engine.connect() as conn:
         conn.execute(sql_insert_posts, line)
 
     # Modify auto-increment for ids
-    conn.execute(text("SELECT setval(pg_get_serial_sequence('categories', 'id'), :val)"), {"val": 3})
-    conn.execute(text("SELECT setval(pg_get_serial_sequence('users', 'id'), :val)"), {"val": 4})
-    conn.execute(text("SELECT setval(pg_get_serial_sequence('posts', 'id'), :val)"), {"val": 12})
-    
+    conn.execute(
+        text("SELECT setval(pg_get_serial_sequence('categories', 'id'), :val)"),
+        {"val": 3},
+    )
+    conn.execute(
+        text("SELECT setval(pg_get_serial_sequence('users', 'id'), :val)"), {"val": 4}
+    )
+    conn.execute(
+        text("SELECT setval(pg_get_serial_sequence('posts', 'id'), :val)"), {"val": 12}
+    )
+
     conn.commit()
 
     print("Database successfully seeded")

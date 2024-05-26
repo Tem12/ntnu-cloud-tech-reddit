@@ -204,7 +204,7 @@ def create_post(
     # Validation that only logged in user can create post for themselves
     if user_id != create_post.owner_id:
         raise HTTPException(status_code=400, detail="Invalid user id")
-    
+
     valid, reason = validation.valid_post_text(create_post.text)
     if not valid:
         raise HTTPException(status_code=400, detail=reason)
@@ -238,7 +238,9 @@ def like_post(post_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/user/{username}/info")
-def get_user_info(username: str, token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
+def get_user_info(
+    username: str, token: Optional[str] = Cookie(None), db: Session = Depends(get_db)
+):
     reques_all_info = False
 
     # Validate user's token
@@ -248,7 +250,7 @@ def get_user_info(username: str, token: Optional[str] = Cookie(None), db: Sessio
         user_id = None
 
     if user_id is not None:
-    # Request all info if username is same as logged in user
+        # Request all info if username is same as logged in user
         id_user = crud.get_user_by_id(db, user_id)
 
         if id_user is not None and id_user.username == username:

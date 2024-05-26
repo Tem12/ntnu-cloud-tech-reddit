@@ -7,7 +7,7 @@ def valid_email(email: str) -> Tuple[bool, str]:
         return False, "Email address is empty"
     elif len(email) >= 255:
         return False, "Email address is too long"
-    
+
     email_regex_pattern = re.compile(
         r"(^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
     )
