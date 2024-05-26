@@ -5,26 +5,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
-jobs:
-  install-dependencies:
-    runs-on: [ubuntu-latest, ubuntu-20.04]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.10"
-      
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r api/requirements.txt
-    
+jobs:    
   test:
-    runs-on: [ubuntu-latest, ubuntu-20.04]
-    needs: install-dependencies
+    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres
@@ -53,21 +36,34 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
       
-      - name: Create .env
+      - name: Install dependencies
         run: |
-          echo "DB_URL=postgresql://postgres:postgres@localhost:5432/reddit\nJWT_SECRET=secret" > .env
-      
+          python -m pip install --upgrade pip
+          pip install -r api/requirements.txt
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '20.13.1'
+      
+      - name: Create .env
+        run: |
+          echo "DB_URL=postgresql://postgres:postgres@localhost:5432/reddit\nJWT_SECRET=secret\nREDIS_HOST=localhost" > .env
       
       - name: Install node js dependencies
         run: |
           cd frontend && npm install -g yarn
           cd frontend && npm install -g typescript
           cd frontend && yarn install
+
+      - name: Create tables in database from migrations
+        run: make init
       
       - name: Seed database and cache
         run: make seed
@@ -77,4 +73,20 @@ jobs:
 
       - name: Test api and cache services
         run: make test
+
+  build-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build frontend image
+        run: cd frontend && docker build -t cloudtech-2-frontend:latest .
+
+      - name: Build API image
+        run: cd api && docker build -t cloudtech-2-api:latest .
+
+      - name: Build Cache service image
+        run: cd cache-service && docker build -t cloudtech-2-cache:latest .
+
           
