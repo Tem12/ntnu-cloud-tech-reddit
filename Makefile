@@ -4,6 +4,9 @@ seed: seed-db seed-cache
 
 test: test-api test-cache
 
+init-db:
+	cd api/src/assignment2api && alembic upgrade head
+
 seed-db:
 	cd api/data-seed && python3 db-seeder.py
 

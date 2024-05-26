@@ -1,6 +1,11 @@
 import redis
+import os
+from dotenv import load_dotenv
 
-r = redis.Redis(host="localhost", port=6379, db=0)
+load_dotenv()
+REDIS_HOST = os.getenv("REDIS_HOST")
+
+r = redis.Redis(host=REDIS_HOST, port=6379, db=0)
 
 r.set(1, 5)
 r.set(2, 451)

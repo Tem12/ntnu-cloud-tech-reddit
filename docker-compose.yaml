@@ -1,13 +1,44 @@
 services:
   postgres:
     image: "postgres"
+    networks:
+      - databases
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=jXd1Pi3hsiSotm9BHKgw6X0yfN
+      - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=reddit
   redis:
     image: "redis"
+    networks:
+      - databases
     ports:
       - "6379:6379"
+  cloudtech-2-api:
+    image: "cloudtech-2-api"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - databases
+    ports:
+      - "8000:8000"
+  cloudtech-2-cache:
+    image: "cloudtech-2-cache"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - databases
+    ports:
+      - "8001:8000"
+  cloudtech-2-frontend:
+    image: "cloudtech-2-frontend"
+    networks:
+      - databases
+    ports:
+      - "3000":"8000"
+
+networks:
+  databases:

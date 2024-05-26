@@ -15,7 +15,7 @@ import Home from './Components/Home';
 import Category from './Components/Category';
 import ApiService from './ApiService';
 import './App.scss';
-import { API_URL, API_PORT, CACHE_URL, CACHE_PORT, CACHE_ENABLED } from './env';
+import { API_PORT, CACHE_PORT, CACHE_ENABLED } from './env';
 import { LOGGED_IN_UNKNOWN, LOGGED_IN_TRUE, LOGGED_IN_FALSE } from './types';
 import Login from './Components/Login';
 import Register from './Components/Register';
@@ -46,9 +46,9 @@ export default class App extends React.Component {
         this.hideAlert = this.hideAlert.bind(this);
 
         this.api = ApiService.getInstance();
-        this.api.setBaseUrl(API_URL);
+        this.api.setBaseUrl(`http://${window.location.hostname}`);
         this.api.setPort(API_PORT);
-        this.api.setCacheUrl(CACHE_URL);
+        this.api.setCacheUrl(`http://${window.location.hostname}`);
         this.api.setCachePort(CACHE_PORT);
         this.api.setCacheEnabled(CACHE_ENABLED);
     }

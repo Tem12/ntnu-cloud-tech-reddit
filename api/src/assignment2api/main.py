@@ -17,6 +17,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 import crud, models, schemas, password_utils, jwt_utils, validation
+from likebatch import LikeBatch
 from database import SessionLocal, engine
 
 # Setup logger
@@ -28,6 +29,10 @@ logger.addHandler(stream_handler)
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
+
+# Start LikeBatcher sync service
+like_batch = LikeBatch()
+like_batch.schedule_sync()
 
 
 def get_db():

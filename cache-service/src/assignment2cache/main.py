@@ -12,9 +12,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import logging
 import redis
+import os
 
 import schemas
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
 # Setup logger
 logger = logging.getLogger(__name__)
@@ -25,7 +26,10 @@ logger.addHandler(stream_handler)
 
 app = FastAPI()
 
-r = redis.Redis(host="localhost", port=6379, db=0)
+load_dotenv()
+REDIS_HOST = os.getenv("REDIS_HOST")
+
+r = redis.Redis(host=REDIS_HOST, port=6379, db=0)
 
 
 # Enable cors
@@ -44,8 +48,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-load_dotenv()
-
 
 def setup():
     pass
@@ -62,7 +64,7 @@ def get_likes(post_ids: schemas.LikePosts):
         # Check if post exists in case of adding new entry from user
         if int(r.exists(id)) == 0:
             r.set(id, 0)
-             
+
         post_likes_num = int(r.get(id))
         likes[id] = post_likes_num
     return {"likes": likes}
