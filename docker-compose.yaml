@@ -51,7 +51,6 @@ services:
   
   nginx:
     image: cloudtech-2-nginx
-    command: sh -c "sleep 600"
     ports:
       - "80:80"
     networks:
