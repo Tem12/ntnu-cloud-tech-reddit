@@ -1,3 +1,9 @@
+build: build-api build-cache build-frontend
+
+seed: seed-db seed-cache
+
+test: test-api test-cache
+
 seed-db:
 	cd api/data-seed && python3 db-seeder.py
 
@@ -9,6 +15,9 @@ build-api:
 
 build-cache:
 	cd cache-service && pip3 install .
+
+build-frontend:
+	cd frontend && yarn build
 
 test-api:
 	cd api && PYTHONPATH=src/assignment2api python3 -m pytest
