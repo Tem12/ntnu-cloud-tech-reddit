@@ -1,0 +1,59 @@
+.thumb-up-button {
+    background-color: #5684f8;
+    border: 2px solid #e4e9ef;
+    border-radius: 24px;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px, rgba(0, 0, 0, 0.06) 0 1px 2px;
+    transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;
+
+    .likes-text {
+        min-width: 50px;
+    }
+}
+
+.event-card {
+    background-color: white;
+    border: 2px solid #e4e9ef;
+    box-shadow: rgba($color: #12263f, $alpha: 0.05) 0 12px 24px 0;
+    border-radius: 6px;
+
+    .description {
+        height: 78px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+// Contribution of animation of like button belongs to Nour Saud: https://codepen.io/nourabusoud/pen/ypZzMM
+.thumb-up-button {
+    -webkit-appearance: none;
+    appearance: none;
+    transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
+
+    &:focus {
+        outline: 0;
+    }
+
+    &:active {
+        transform: scale(0.9);
+        background-color: darken(#5684f8, 5%);
+        box-shadow: 0 2px 25px rgba(33, 129, 254, 0.2);
+    }
+
+    &.animate {
+        &:before {
+            display: block;
+            animation: topBubbles ease-in-out 0.75s forwards;
+        }
+        &:after {
+            display: block;
+            animation: bottomBubbles ease-in-out 0.75s forwards;
+        }
+    }
+}
