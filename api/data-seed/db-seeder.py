@@ -11,9 +11,9 @@ engine = create_engine(DB_URL)
 
 with engine.connect() as conn:
     categories = (
-        {"id": 1, "name": "science"},
-        {"id": 2, "name": "books"},
-        {"id": 3, "name": "space-around-us"},
+        {"id": 1, "name": "Science"},
+        {"id": 2, "name": "Books"},
+        {"id": 3, "name": "Space-Around-Us"},
     )
     users = (
         {
@@ -161,6 +161,11 @@ with engine.connect() as conn:
     for line in posts:
         conn.execute(sql_insert_posts, line)
 
+    # Modify auto-increment for ids
+    conn.execute(text("SELECT setval(pg_get_serial_sequence('categories', 'id'), :val)"), {"val": 3})
+    conn.execute(text("SELECT setval(pg_get_serial_sequence('users', 'id'), :val)"), {"val": 4})
+    conn.execute(text("SELECT setval(pg_get_serial_sequence('posts', 'id'), :val)"), {"val": 12})
+    
     conn.commit()
 
     print("Database successfully seeded")
