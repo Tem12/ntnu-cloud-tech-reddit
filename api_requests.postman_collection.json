@@ -1,0 +1,454 @@
+{
+	"info": {
+		"_postman_id": "d32c3583-83d4-4fa3-801d-73f56e0e4560",
+		"name": "NTNU - Cloud tech Assignment 2",
+		"description": "Requests to test API service.\n\nRequirements: seed database before testing using `make seed`.\n\nIt uses 4 env variables - `env_id`, `user_id`, `category_id`, and `username`.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12340128"
+	},
+	"item": [
+		{
+			"name": "Register user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"github@example.com\",\n    \"username\": \"github\",\n    \"password\": \"asdfgh\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/create-user",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"create-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\": \"asdfgh\",\n    \"username\": \"alexander\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"asdfgh\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/refresh-token",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"refresh-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"HelloWorld\",\n    \"category_id\": 2,\n    \"owner_id\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/create-post",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"create-post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get categories",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/get-categories",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"get-categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user posts",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/get-user-posts/{{user_id}}?offset=0",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"get-user-posts",
+						"{{user_id}}"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user posts count",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/get-user-post-count/{{user_id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"get-user-post-count",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get category name",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/get-category-name/{{category_id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"get-category-name",
+						"{{category_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get category posts",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/get-category-posts/{{category_id}}?offset=0",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"get-category-posts",
+						"{{category_id}}"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get category post count",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/get-category-post-count/{{category_id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"get-category-post-count",
+						"{{category_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user info",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/user/{{username}}/info",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"{{username}}",
+						"info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Like post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/like-post/{{post_id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"like-post",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change username",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"new_username\": \"unknown\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/{{user_id}}/change-username",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"{{user_id}}",
+						"change-username"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"new_email\": \"unknown@example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/{{user_id}}/change-email",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"{{user_id}}",
+						"change-email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"new_password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/user/{{user_id}}/change-password",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"{{user_id}}",
+						"change-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove user account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/user/{{user_id}}/remove-account",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"{{user_id}}",
+						"remove-account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cache - Get likes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"post_ids\": [4,5,6]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8001/get-likes",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"get-likes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cache - Like post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/like-post/12",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"like-post",
+						"12"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
