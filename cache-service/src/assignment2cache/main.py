@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 import logging
 import redis
 
+import schemas
 from fastapi import FastAPI, HTTPException
 
 # Setup logger
@@ -28,13 +29,18 @@ r = redis.Redis(host="localhost", port=6379, db=0)
 
 
 # Enable cors
-origins = ["*"]
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:8001",
+    "http://localhost:3000",
+]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
@@ -48,13 +54,21 @@ def setup():
 setup()
 
 
-@app.post("/get-likes/{post_id}")
-def get_likes(post_id: int):
-    likes = int(r.get(post_id))
+@app.post("/get-likes")
+def get_likes(post_ids: schemas.LikePosts):
+    likes = {}
+
+    for id in post_ids.post_ids:
+        # Check if post exists in case of adding new entry from user
+        if int(r.exists(id)) == 0:
+            r.set(id, 0)
+             
+        post_likes_num = int(r.get(id))
+        likes[id] = post_likes_num
     return {"likes": likes}
 
 
-@app.post("increment-likes/{post_id}")
+@app.post("/like-post/{post_id}")
 def increment_likes(post_id: int):
     r.incr(post_id)
     return {"success": True}
