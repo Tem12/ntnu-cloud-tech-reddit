@@ -10,6 +10,14 @@ DB_URL = os.getenv("DB_URL")
 engine = create_engine(DB_URL)
 
 with engine.connect() as conn:
+    # Reset DB first
+    conn.execute(text("TRUNCATE TABLE posts RESTART IDENTITY CASCADE"))
+    conn.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
+    conn.execute(text("TRUNCATE TABLE categories RESTART IDENTITY CASCADE"))
+    conn.commit()
+
+    print("Database being purged...")
+    
     categories = (
         {"id": 1, "name": "Science"},
         {"id": 2, "name": "Books"},
@@ -151,6 +159,8 @@ with engine.connect() as conn:
     sql_insert_posts = text(
         "INSERT INTO posts(id, category_id, text, owner_id, likes, created_at) VALUES (:id, :category_id, :text, :owner_id, :likes, :created_at)"
     )
+
+    print("Database being filled with new data...")
 
     for line in categories:
         conn.execute(sql_insert_categories, line)
