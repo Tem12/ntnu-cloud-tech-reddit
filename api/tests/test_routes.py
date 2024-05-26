@@ -3,10 +3,9 @@
 # File: test_routes.py
 # Brief: API routes tests
 # Author: Tomas Hladky <tomashl@stud.ntnu.no>
-# Date: March 29th, 2024
+# Date: May 25th, 2024
 # -------------------------------------------------------------
 
-import httpx
 from fastapi.testclient import TestClient
 
 from assignment2api.main import app
