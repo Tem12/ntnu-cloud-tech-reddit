@@ -1,5 +1,6 @@
-from sqlalchemy import desc, select
+from sqlalchemy import desc, select, case, literal
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 import models, schemas
 
@@ -74,16 +75,27 @@ def update_user_password(db: Session, update_user_id: int, new_hashed_password: 
         return False
 
 
-def find_user_by_id(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
-
-
-def get_user_basic_info(db: Session, user_id: int):
+def get_user_basic_info_with_email(db: Session, username: str):
     return (
         db.execute(
             select(
-                models.User.username, models.User.email, models.User.created_at
-            ).filter(models.User.id == user_id)
+                models.User.id,
+                models.User.email,
+                models.User.created_at,
+            ).filter(models.User.username == username)
+        )
+        .mappings()
+        .first()
+    )
+
+
+def get_user_basic_info_without_email(db: Session, username: str):
+    return (
+        db.execute(
+            select(
+                models.User.id,
+                models.User.created_at,
+            ).filter(models.User.username == username)
         )
         .mappings()
         .first()
@@ -91,6 +103,11 @@ def get_user_basic_info(db: Session, user_id: int):
 
 
 def delete_user(db: Session, delete_user_id: int):
+    # Delete all user's posts first
+    db.query(models.Post).filter(models.Post.owner_id == delete_user_id).delete()
+    db.commit()
+
+    # Delete the user
     db.query(models.User).filter(models.User.id == delete_user_id).delete()
     db.commit()
 
@@ -114,7 +131,7 @@ def get_all_posts(db: Session):
     return db.query(models.Post).all()
 
 
-def update_post_likes(db: Session, update_post_id: int, new_likes: int):
+def update_post_likes(update_post_id: int, new_likes: int, db: Session):
     db_post = (
         db.query(models.Post).filter(models.Post.id == update_post_id).one_or_none()
     )
@@ -126,6 +143,29 @@ def update_post_likes(db: Session, update_post_id: int, new_likes: int):
         print(f"Likes for post {update_post_id} updated to {new_likes}")
     else:
         print(f"No post with id {update_post_id} found")
+
+
+def increment_post_likes(update_post_id: int, db: Session):
+    db_post = (
+        db.query(models.Post).filter(models.Post.id == update_post_id).one_or_none()
+    )
+
+    if db_post is not None:
+        db_post.likes = db_post.likes + 1
+
+        db.commit()
+
+    return db_post
+
+
+def get_category_name(db: Session, category_id: int):
+    return (
+        db.execute(
+            select(models.Category.name).filter(models.Category.id == category_id)
+        )
+        .mappings()
+        .first()
+    )
 
 
 def get_count_of_category_posts(db: Session, category_id: int):
@@ -149,10 +189,11 @@ def get_category_posts(db: Session, category_id: int, offset: int):
 
 def create_post(db: Session, create_post: schemas.PostCreate):
     post = models.Post(
-        title=create_post.title,
+        text=create_post.text,
         category_id=create_post.category_id,
-        content=create_post.content,
         owner_id=create_post.owner_id,
+        likes=0,
+        created_at=datetime.now(),
     )
     db.add(post)
     db.commit()
@@ -162,6 +203,10 @@ def create_post(db: Session, create_post: schemas.PostCreate):
 
 def get_categories(db: Session):
     return db.query(models.Category).all()
+
+
+def find_category_by_id(db: Session, category_id: int):
+    return db.query(models.Category).filter(models.Category.id == category_id).first()
 
 
 def create_category(db: Session, create_category: schemas.CategoryCreate):

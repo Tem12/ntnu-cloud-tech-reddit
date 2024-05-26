@@ -3,7 +3,9 @@ from typing import Tuple
 
 
 def valid_email(email: str) -> Tuple[bool, str]:
-    if len(email) >= 255:
+    if len(email) == 0:
+        return False, "Email address is empty"
+    elif len(email) >= 255:
         return False, "Email address is too long"
     
     email_regex_pattern = re.compile(
@@ -17,21 +19,27 @@ def valid_email(email: str) -> Tuple[bool, str]:
 
 
 def valid_username(username: str) -> Tuple[bool, str]:
-    if len(username) >= 32:
+    if len(username) == 0:
+        return False, "Username is empty"
+    elif len(username) >= 32:
         return False, "Username is too long"
 
     return True, ""
 
 
 def valid_password(password: str) -> Tuple[bool, str]:
-    if len(password) >= 255:
+    if len(password) == 0:
+        return False, "Password is emtpy"
+    elif len(password) >= 255:
         return False, "Password is too long"
 
     return True, ""
 
 
-def valid_post_text(title: str) -> Tuple[bool, str]:
-    if len(title) >= 512:
-        return False, "Title of the post is too long"
+def valid_post_text(text: str) -> Tuple[bool, str]:
+    if len(text) == 0:
+        return False, "Text of the post is empty"
+    elif len(text) >= 512:
+        return False, "Text of the post is too long"
 
     return True, ""

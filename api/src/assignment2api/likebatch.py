@@ -19,12 +19,12 @@ def sync_likes_with_db():
         print(f"Likes for {post.id} in Redis: {redis_post_likes}")
         print(f"Likes for {post.id} in DB: {post.likes}")
         if post.likes != redis_post_likes:
-            crud.update_post_likes(db, post.id, redis_post_likes)
+            crud.update_post_likes(post.id, redis_post_likes, db)
 
     db.close()
 
 
-schedule.every(10).minutes.do(sync_likes_with_db)
+schedule.every(5).minutes.do(sync_likes_with_db)
 
 while True:
     schedule.run_pending()

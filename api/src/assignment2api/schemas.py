@@ -12,7 +12,6 @@ class PostCreate(PostBase):
 
 
 class Post(PostBase):
-    text: str
     likes: int
     created_at: datetime
 
