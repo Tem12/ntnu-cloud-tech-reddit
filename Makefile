@@ -4,6 +4,11 @@ seed: seed-db seed-cache
 
 test: test-api test-cache
 
+build-images: image-frontend image-api image-cache image-nginx
+
+docker-compose:
+	docker compose up -d
+
 init-db:
 	cd api/src/assignment2api && alembic upgrade head
 
@@ -28,3 +33,14 @@ test-api:
 test-cache:
 	cd cache-service && PYTHONPATH=src/assignment2cache python3 -m pytest
 
+image-frontend:
+	cd frontend && docker build -t cloudtech-2-frontend:latest .
+
+image-api:
+	cd api && docker build -t cloudtech-2-api:latest .
+
+image-cache:
+	cd cache-service && docker build -t cloudtech-2-cache:latest .
+
+image-nginx:
+	cd nginx && docker build -t cloudtech-2-nginx:latest .

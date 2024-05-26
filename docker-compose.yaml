@@ -2,7 +2,7 @@ services:
   postgres:
     image: "postgres"
     networks:
-      - databases
+      - shared-network
     ports:
       - "5432:5432"
     environment:
@@ -12,7 +12,7 @@ services:
   redis:
     image: "redis"
     networks:
-      - databases
+      - shared-network
     ports:
       - "6379:6379"
   cloudtech-2-api:
@@ -21,7 +21,7 @@ services:
       - postgres
       - redis
     networks:
-      - databases
+      - shared-network
     ports:
       - "8000:8000"
   cloudtech-2-cache:
@@ -30,15 +30,36 @@ services:
       - postgres
       - redis
     networks:
-      - databases
+      - shared-network
     ports:
       - "8001:8000"
-  cloudtech-2-frontend:
+  
+  cloudtech-2-frontend-1:
     image: "cloudtech-2-frontend"
     networks:
-      - databases
+      - shared-network
+
+  cloudtech-2-frontend-2:
+    image: "cloudtech-2-frontend"
+    networks:
+      - shared-network
+
+  cloudtech-2-frontend-3:
+    image: "cloudtech-2-frontend"
+    networks:
+      - shared-network
+  
+  nginx:
+    build: cloudtech-2-nginx
+    command: sh -c "sleep 600"
     ports:
-      - "3000":"8000"
+      - "80:80"
+    networks:
+      - shared-network
+    depends_on:
+      - cloudtech-2-frontend-1
+      - cloudtech-2-frontend-2
+      - cloudtech-2-frontend-3
 
 networks:
-  databases:
+  shared-network:
