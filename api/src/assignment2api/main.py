@@ -90,13 +90,6 @@ def login_user(
 def register_user(
     user: schemas.UserCreate, response: Response, db: Session = Depends(get_db)
 ):
-    db_user = crud.get_user_by_email(db, user.email)
-
-    if db_user is not None:
-        raise HTTPException(
-            status_code=409, detail="User with this email already exists"
-        )
-
     hashed_password = password_utils.create_hashed_password(user.password)
 
     valid, reason = validation.valid_username(user.username)
@@ -356,7 +349,7 @@ def change_user_password(
     if not valid:
         raise HTTPException(status_code=400, detail=reason)
 
-    existing_email = crud.get_user_by_username(db, user.new_email)
+    existing_email = crud.get_user_by_email(db, user.new_email)
     if existing_email is not None:
         raise HTTPException(status_code=400, detail="This email already exists")
 
