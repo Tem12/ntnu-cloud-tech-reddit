@@ -131,7 +131,3 @@ Env variables for local services:
 
 ![Project overview 1](./doc/img2.png)
 ![Project overview 1](./doc/img3.png)
-
-# Notes
-
-Part of the github action job fails because postgresql cannot be deployed. This container for pytest. However, it can be tested manually on local machine with generation of coverage reports. Build-images job pass successfully.

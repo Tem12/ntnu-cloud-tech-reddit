@@ -37,5 +37,5 @@ sudo docker image pull redis
 make docker-compose
 
 # Seed the database
-sleep 20
-make seed
+# sleep 20
+# make seed
