@@ -23,7 +23,7 @@ services:
     networks:
       - shared-network
     ports:
-      - "8000:8000"
+      - "9000:8000"
   cloudtech-2-cache:
     image: "cloudtech-2-cache"
     depends_on:
@@ -32,7 +32,7 @@ services:
     networks:
       - shared-network
     ports:
-      - "8001:8000"
+      - "9001:8000"
   
   cloudtech-2-frontend-1:
     image: "cloudtech-2-frontend"
