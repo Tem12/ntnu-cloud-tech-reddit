@@ -13,8 +13,6 @@ services:
     image: "redis"
     networks:
       - shared-network
-    ports:
-      - "6379:6379"
   cloudtech-2-api:
     image: "cloudtech-2-api"
     depends_on:
