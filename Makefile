@@ -1,8 +1,9 @@
+.PHONY: doc
+
 build: build-api build-cache build-frontend
 
-doc: python3 -m md2pdf --css=doc/style.css README.md README.pdf
-
-init-db: cd api/src/assignment2api && alembic upgrade head
+doc:
+	python3 -m md2pdf --css=doc/style.css README.md README.pdf
 
 seed: seed-db seed-cache
 

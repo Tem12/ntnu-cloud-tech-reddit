@@ -8,7 +8,7 @@
 
 # Project structure
 
-```
+<!-- ```
 ntnu-cloud-tech-reddit/
 ├─ .github/
 ├─ .vscode
@@ -36,7 +36,9 @@ ntnu-cloud-tech-reddit/
 ├─ LICENSE
 ├─ Makefile
 ├─ README.md
-```
+``` -->
+
+![Project structure](./doc/project_structure.png)
 
 - `.github`: Github action configuration
 - `.vscode`: VSCode configuration
