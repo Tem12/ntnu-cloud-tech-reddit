@@ -64,7 +64,7 @@ jobs:
           cd frontend && yarn install
 
       - name: Create tables in database from migrations
-        run: make init
+        run: make init-db
       
       - name: Seed database and cache
         run: make seed
